@@ -1,0 +1,60 @@
+abstract class Account {
+  int accountNumber;
+  double balance;
+
+  Account(this.accountNumber, this.balance);
+
+  void deposit(double amount) {
+    balance += amount;
+  }
+
+  void withdraw(double amount); // Abstract method
+}
+
+class SavingsAccount extends Account {
+  double interestRate;
+  SavingsAccount(int accountNumber, double balance, this.interestRate)
+      : super(accountNumber, balance);
+
+  @override
+  void withdraw(double amount) {
+    if (balance >= amount) {
+      balance -= amount;
+      balance += (balance * interestRate);
+    } else {
+      print("Insufficient funds in Savings Account");
+    }
+  }
+}
+
+class CurrentAccount extends Account {
+  double overdraftLimit;
+  CurrentAccount(int accountNumber, double balance, this.overdraftLimit)
+      : super(accountNumber, balance);
+
+  @override
+  void withdraw(double amount) {
+    if (balance + overdraftLimit >= amount) {
+      balance -= amount;
+    } else {
+      print("Insufficient funds in Current Account");
+    }
+  }
+}
+
+void main() {
+  // Creating a Savings Account
+  SavingsAccount savingsAccount = SavingsAccount(12345, 1000.0, 0.05);
+  print("Savings Account - Initial Balance: ${savingsAccount.balance}");
+  savingsAccount.deposit(500.0);
+  savingsAccount.withdraw(200.0);
+  print("Savings Account - Balance after operations: ${savingsAccount.balance}");
+
+  // Creating a Current Account
+  CurrentAccount currentAccount = CurrentAccount(54321, 2000.0, 1000.0);
+  print("Current Account - Initial Balance: ${currentAccount.balance}");
+  currentAccount.deposit(300.0);
+  currentAccount.withdraw(2500.0);
+  print("Current Account - Balance after operations: ${currentAccount.balance}");
+}
+
